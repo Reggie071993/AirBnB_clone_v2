@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
-# Script using bash to setup webservers for deployment of simple HTML
-# content
+# configure my servers
 
-apt-get update && \
-apt-get install -y nginx && \
-mkdir -p -m=755 /data/web_static/{releases/test,shared} || exit 0
-echo 'Testing 123' > /data/web_static/releases/test/index.html
+apt-get -y update
+apt-get -y install nginx
+mkdir -p /data/
+mkdir -p /data/web_static/
+mkdir -p /data/web_static/releases/
+mkdir -p /data/web_static/shared/
+mkdir -p /data/web_static/releases/test/
+echo "test wowww" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
-chown -hR ubuntu:ubuntu /data/
-insert='\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;}'
-sed -i "37i $insert" /etc/nginx/sites-available/default
+chown -hR ubuntu:ubuntu /data
+# n="server_name _;\n\tlocation \/hbnb_static\/ {\n\talias \/data\/web_static\/current\/; \n\t}\n"
+# sudo sed -i "s/server_name _;/$n/" /etc/nginx/sites-available/default
+sed -i "s/^\}$/\tlocation \/hbnb_static\/ \{\n\t\talias \/data\/web_static\/current\/\;\n\t\}\n\}/" /etc/nginx/sites-enabled/default
 service nginx restart
-exit 0
