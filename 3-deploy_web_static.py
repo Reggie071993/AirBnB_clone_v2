@@ -19,9 +19,9 @@ def do_pack():
                                                          dt.hour,
                                                          dt.minute,
                                                          dt.second)
-            return None
     if os.path.isdir("versions") is False:
         if local("mkdir -p versions").failed is True:
+            return None
     if local("tar -cvzf {} web_static".format(file)).failed is True:
         return None
     return file
@@ -42,9 +42,9 @@ def do_deploy(archive_path):
 
     if put(archive_path, "/tmp/{}".format(file)).failed is True:
         return False
+    if run("rm -rf /data/web_static/releases/{}/".
            format(name)).failed is True:
         return False
-    if run("rm -rf /data/web_static/releases/{}/".
     if run("mkdir -p /data/web_static/releases/{}/".
            format(name)).failed is True:
         return False
@@ -65,7 +65,6 @@ def do_deploy(archive_path):
            format(name)).failed is True:
         return False
     return True
-
 
 def deploy():
     """Create and distribute an archive to a web server."""
